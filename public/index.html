@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Google Form 生成器</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="workspace">
+      <aside class="sidebar">
+        <div class="brand">Form AI</div>
+        <div class="rail-note">Workspace</div>
+      </aside>
+
+      <section class="app-shell">
+        <header class="topbar">
+          <div>
+            <h1>Google Form 对话生成</h1>
+            <p>像写 Notion 文档一样输入需求，我们直接帮你创建 Google Form。</p>
+          </div>
+          <button id="authBtn" class="btn">登录 Google</button>
+        </header>
+
+        <section id="chat" class="chat"></section>
+
+        <form id="composer" class="composer">
+          <label class="file-picker">
+            <span>上传文件</span>
+            <input id="sourceFile" type="file" accept=".csv,.json,.txt,.md,.tsv,.pdf" />
+          </label>
+          <input
+            id="promptInput"
+            type="text"
+            placeholder="例如：生成一个 8 题 quiz，考察用户对产品的理解"
+            autocomplete="off"
+          />
+          <button type="submit" class="btn btn-primary">生成表单</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>

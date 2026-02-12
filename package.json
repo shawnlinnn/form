@@ -1,0 +1,22 @@
+{
+  "name": "form-chat-generator",
+  "version": "1.0.0",
+  "description": "Chat-based Google Form generator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "googleapis": "^150.0.1",
+    "https-proxy-agent": "^7.0.6",
+    "multer": "^2.0.2",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "pdf-parse": "^2.4.5",
+    "tesseract.js": "^7.0.0"
+  }
+}
