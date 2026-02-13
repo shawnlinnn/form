@@ -1264,6 +1264,14 @@ app.post('/api/forms/generate', ensureAuth, upload.single('sourceFile'), async (
   }
 });
 
+app.get('/privacy', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'privacy.html'));
+});
+
+app.get('/terms', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'terms.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(PORT, () => {
