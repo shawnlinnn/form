@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Google Form 生成器</title>
+    <title>FormGPT | Google Form 智能生成助手</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,18 +15,30 @@
   <body>
     <main class="workspace">
       <aside class="sidebar">
-        <div class="brand">Form AI</div>
+        <div class="brand">FormGPT</div>
         <div class="rail-note">Workspace</div>
       </aside>
 
       <section class="app-shell">
         <header class="topbar">
           <div>
-            <h1>Google Form 对话生成</h1>
-            <p>像写 Notion 文档一样输入需求，我们直接帮你创建 Google Form。</p>
+            <h1>FormGPT</h1>
+            <p>FormGPT 是一个把自然语言需求或上传文件转换为 Google Form 的应用。</p>
           </div>
           <button id="authBtn" class="btn">登录 Google</button>
         </header>
+
+        <section class="about-app" aria-label="application-purpose">
+          <h2>应用用途说明</h2>
+          <p>
+            本应用仅用于帮助你快速创建问卷/测验类 Google Form。你描述需求后，FormGPT 会生成问题草稿并在你授权的账号下创建表单。
+          </p>
+          <ul>
+            <li>输入方式：文本指令，或上传 CSV / JSON / TXT / MD / TSV / PDF。</li>
+            <li>Google 授权范围：仅用于创建和编辑你请求生成的 Google Form。</li>
+            <li>输出结果：返回表单编辑链接和可填写链接，便于你继续修改或发布。</li>
+          </ul>
+        </section>
 
         <section id="chat" class="chat"></section>
 

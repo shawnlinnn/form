@@ -1,7 +1,7 @@
 {
   "name": "form-chat-generator",
   "version": "1.0.0",
-  "description": "Chat-based Google Form generator",
+  "description": "FormGPT: chat-based Google Form generator",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

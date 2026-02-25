@@ -1,4 +1,4 @@
-# Google Form Chat Generator
+# FormGPT
 
 一个对话式网站：用户描述需求，系统自动创建 Google Form。
 
