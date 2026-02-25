@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const https = require('https');
 const express = require('express');
@@ -8,9 +10,45 @@ const multer = require('multer');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { google } = require('googleapis');
-const { PDFParse } = require('pdf-parse');
-const { recognize } = require('tesseract.js');
 const { HttpsProxyAgent } = require('https-proxy-agent');
+
+const OCR_TMP_DIR = process.env.OCR_TMP_DIR || path.join(os.tmpdir(), 'formgpt');
+const OCR_CACHE_DIR = process.env.OCR_CACHE_DIR || path.join(OCR_TMP_DIR, 'tesseract-cache');
+
+function ensureDir(dirPath) {
+  try {
+    fs.mkdirSync(dirPath, { recursive: true });
+    return true;
+  } catch (error) {
+    console.error(`Failed to create directory "${dirPath}":`, error.message);
+    return false;
+  }
+}
+
+// Some dependencies rely on temp env vars; force them to a writable location.
+if (ensureDir(OCR_TMP_DIR)) {
+  process.env.TMPDIR = OCR_TMP_DIR;
+  process.env.TMP = OCR_TMP_DIR;
+  process.env.TEMP = OCR_TMP_DIR;
+}
+ensureDir(OCR_CACHE_DIR);
+
+let PDFParseModule;
+let tesseractRecognize;
+
+function getPDFParse() {
+  if (!PDFParseModule) {
+    PDFParseModule = require('pdf-parse').PDFParse;
+  }
+  return PDFParseModule;
+}
+
+function getTesseractRecognize() {
+  if (!tesseractRecognize) {
+    tesseractRecognize = require('tesseract.js').recognize;
+  }
+  return tesseractRecognize;
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -602,6 +640,8 @@ function extractQuestionsFromPdfText(text) {
 }
 
 async function extractTextWithPdfOcr(fileBuffer) {
+  const PDFParse = getPDFParse();
+  const recognize = getTesseractRecognize();
   let parser;
   try {
     parser = new PDFParse({ data: fileBuffer });
@@ -621,11 +661,17 @@ async function extractTextWithPdfOcr(fileBuffer) {
       if (!imageBuffer.length) continue;
 
       try {
-        const result = await recognize(imageBuffer, 'chi_sim+eng');
+        const result = await recognize(imageBuffer, 'chi_sim+eng', {
+          cachePath: OCR_CACHE_DIR,
+          cacheMethod: 'write'
+        });
         const text = result?.data?.text?.trim();
         if (text) chunks.push(text);
       } catch {
-        const fallback = await recognize(imageBuffer, 'eng');
+        const fallback = await recognize(imageBuffer, 'eng', {
+          cachePath: OCR_CACHE_DIR,
+          cacheMethod: 'write'
+        });
         const text = fallback?.data?.text?.trim();
         if (text) chunks.push(text);
       }
@@ -678,6 +724,7 @@ async function extractSourceFromUploadedFile(file) {
     extractMethod = 'raw_text';
     fields = parseJsonKeys(text);
   } else if (isPdf) {
+    const PDFParse = getPDFParse();
     let parser;
     try {
       parser = new PDFParse({ data: file.buffer });
